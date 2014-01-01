@@ -69,7 +69,7 @@ You can add a delegate to an ```AXStatusItemPopup``` object. The following deleg
 - (BOOL) shouldPopupClose;
 - (void) popupWillClose;
 - (void) popupDidClose;
-``
+```
 
 ### Please notice
 

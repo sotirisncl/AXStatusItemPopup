@@ -73,7 +73,7 @@ You can add a delegate to an ```AXStatusItemPopup``` object. The following deleg
 
 ### Please notice
 
-The popover will not be able to disappear if in its content view another popup or menu is open(Maybe something else won't work too). As a workaround set the delegate of the StatusItemPopu and listen for ```popoverWillClose```to close those controls before the popover is closed.
+The popover won't be able to close if in its content view another popup is open (Maybe something else won't work too). As a workaround set the delegate of the StatusItemPopup and listen for ```popoverWillClose``` to close these before the popover itself is closed.
 
 ## Contributing
 

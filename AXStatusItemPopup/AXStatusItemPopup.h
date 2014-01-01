@@ -35,8 +35,8 @@
 
 // alloc
 + (id)statusItemPopupWithViewController:(NSViewController *)controller;
-+ (id)statusItemPopupinitWithViewController:(NSViewController *)controller image:(NSImage *)image;
-+ (id)statusItemPopupinitWithViewController:(NSViewController *)controller image:(NSImage *)image alternateImage:(NSImage *)alternateImage;
++ (id)statusItemPopupWithViewController:(NSViewController *)controller image:(NSImage *)image;
++ (id)statusItemPopupWithViewController:(NSViewController *)controller image:(NSImage *)image alternateImage:(NSImage *)alternateImage;
 
 // init
 - (id)initWithViewController:(NSViewController *)controller;

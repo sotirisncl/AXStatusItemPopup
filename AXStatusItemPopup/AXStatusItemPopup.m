@@ -44,12 +44,12 @@ NSWindow* windowToOverride;
     return [[self alloc] initWithViewController:controller];
 }
 
-+ (id) statusItemPopupinitWithViewController:(NSViewController *)controller image:(NSImage *)image
++ (id) statusItemPopupWithViewController:(NSViewController *)controller image:(NSImage *)image
 {
     return [[self alloc] initWithViewController:controller image:image];
 }
 
-+ (id) statusItemPopupinitWithViewController:(NSViewController *)controller image:(NSImage *)image alternateImage:(NSImage *)alternateImage
++ (id) statusItemPopupWithViewController:(NSViewController *)controller image:(NSImage *)image alternateImage:(NSImage *)alternateImage
 {
     return [[self alloc] initWithViewController:controller image:image alternateImage:alternateImage];
 }

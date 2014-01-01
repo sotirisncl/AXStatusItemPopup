@@ -210,35 +210,43 @@ NSWindow* windowToOverride;
 
 - (void)showPopoverAnimated:(BOOL)animated
 {
-    if (!_popover.isShown)
+    BOOL willAnswer = [self.delegate respondsToSelector:@selector(shouldPopupOpen)];
+    if (!willAnswer || (willAnswer && [self.delegate shouldPopupOpen]))
     {
-        _popover.animates = animated;
-        if ([self.delegate respondsToSelector:@selector(popupWillOpen)])
+        if (!self.popover.isShown)
         {
-            [self.delegate popupWillOpen];
+            _popover.animates = animated;
+            if ([self.delegate respondsToSelector:@selector(popupWillOpen)])
+            {
+                [self.delegate popupWillOpen];
+            }
+            [_popover showRelativeToRect:self.frame ofView:self preferredEdge:NSMinYEdge];
         }
-        [_popover showRelativeToRect:self.frame ofView:self preferredEdge:NSMinYEdge];
-    }
-    [self.window makeKeyWindow];
-    if ([self.delegate respondsToSelector:@selector(popupDidOpen)])
-    {
-        [self.delegate popupDidOpen];
+        [self.window makeKeyWindow];
+        if ([self.delegate respondsToSelector:@selector(popupDidOpen)])
+        {
+            [self.delegate popupDidOpen];
+        }
     }
 }
 
 - (void)hidePopover
 {
-    if (_popover && _popover.isShown)
+    BOOL willAnswer = [self.delegate respondsToSelector:@selector(shouldPopupClose)];
+    if (!willAnswer || (willAnswer && [self.delegate shouldPopupClose]))
     {
-        if ([self.delegate respondsToSelector:@selector(popupWillClose)])
+        if (_popover && _popover.isShown)
         {
-            [self.delegate popupWillClose];
+            if ([self.delegate respondsToSelector:@selector(popupWillClose)])
+            {
+                [self.delegate popupWillClose];
+            }
+            [_popover close];
         }
-        [_popover close];
-    }
-    if ([self.delegate respondsToSelector:@selector(popupDidClose)])
-    {
-        [self.delegate popupDidClose];
+        if ([self.delegate respondsToSelector:@selector(popupDidClose)])
+        {
+            [self.delegate popupDidClose];
+        }
     }
 }
 

@@ -51,8 +51,29 @@ The popover can be shown and hidden manually within code by calling the followin
 
 // hides popover
 [statusItemPopup hidePopover];
+
+// toggle popover (when it's active, it'll disappear, else it is showed)
+[statusItemPopup togglePopover];
+
+// This should be clear
+[statusItemPopup togglePopoverAnimated:YES];
 ```
 
+### The AXStatusItemPopupDelegate
+You can add a delegate to an ```AXStatusItemPopup``` object. The following delegate methods are available, all aren't required:
+```objective-c
+- (BOOL) shouldPopupOpen;
+- (void) popupWillOpen;
+- (void) popupDidOpen;
+
+- (BOOL) shouldPopupClose;
+- (void) popupWillClose;
+- (void) popupDidClose;
+``
+
+### Please notice
+
+The popover will not be able to disappear if in its content view another popup or menu is open(Maybe something else won't work too). As a workaround set the delegate of the StatusItemPopu and listen for ```popoverWillClose```to close those controls before the popover is closed.
 
 ## Contributing
 

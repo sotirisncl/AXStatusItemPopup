@@ -16,9 +16,11 @@
 
 @optional
 
+- (BOOL) shouldPopupOpen;
 - (void) popupWillOpen;
 - (void) popupDidOpen;
 
+- (BOOL) shouldPopupClose;
 - (void) popupWillClose;
 - (void) popupDidClose;
 

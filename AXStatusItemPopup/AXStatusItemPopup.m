@@ -17,10 +17,6 @@ NSWindow* windowToOverride;
 // Private properties
 //
 @interface AXStatusItemPopup ()
-{
-    BOOL _active;
-}
-
     @property NSViewController *viewController;
     @property NSImageView *imageView;
     @property NSStatusItem *statusItem;
@@ -261,7 +257,7 @@ NSWindow* windowToOverride;
     
     NSRect frame = NSMakeRect(0, 0, width, height);
     self.frame = frame;
-    _imageView.frame = frame;
+    self.imageView.frame = frame;
     
     [self setNeedsDisplay:YES];
 }

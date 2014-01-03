@@ -16,6 +16,8 @@ AXStatusItemPopup *statusItemPopup = [[AXStatusItemPopup alloc] initWithViewCont
 
 ```contentViewController``` an NSViewController instance. The contents of this view controllers view will be shown inside the popup. ```image``` is an NSImage that should be shown in the status bar. ```alternateImage``` an NSImage that should be shown if the popover is currently active.
 
+To avoid problems and to hide the MainMenu set ```Application is agent``` in the .plist file to ```YES```.
+
 ### Full Example
 
 ```objective-c

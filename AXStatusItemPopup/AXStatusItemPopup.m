@@ -195,7 +195,7 @@ NSWindow* windowToOverride;
     {
         [self hidePopover];
     } else {
-        [self showPopoverAnimated:self.isAnimated];
+        [self showPopoverAnimated:animated];
     }
 }
 

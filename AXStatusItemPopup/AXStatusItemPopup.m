@@ -17,11 +17,19 @@ NSWindow* windowToOverride;
 // Private properties
 //
 @interface AXStatusItemPopup ()
-    @property NSViewController *viewController;
-    @property NSImageView *imageView;
-    @property NSStatusItem *statusItem;
-    @property NSPopover *popover;
-    @property(assign, nonatomic, getter=isActive) BOOL active;
+
+@property NSViewController *viewController;
+@property NSImageView *imageView;
+@property NSStatusItem *statusItem;
+@property NSPopover *popover;
+@property(assign, nonatomic, getter=isActive) BOOL active;
+
+@property NSWindow* oldKeyWindow;
+@property NSMutableArray* hiddenWindows;
+@property BOOL appWasActive;
+@property int counterOpenedWindows;
+@property BOOL isUpdatingWindows;
+@property BOOL isActiveWithDelay;
 
 @end
 
@@ -51,7 +59,7 @@ NSWindow* windowToOverride;
 }
 
     //*******************************************************************************
-#pragma mark - Initiators
+#pragma mark - Initialization & Dealloc
     //*******************************************************************************
 
 - (id)initWithViewController:(NSViewController *)controller
@@ -73,6 +81,12 @@ NSWindow* windowToOverride;
     {
         _active = NO;
         _animated = YES;
+        _appWasActive = NO;
+        _counterOpenedWindows = 0;
+        _isUpdatingWindows = NO;
+        _isActiveWithDelay = NO;
+        _oldKeyWindow = nil;
+        _hiddenWindows = [NSMutableArray new];
         _viewController = controller;
         
         self.image = image;
@@ -94,10 +108,15 @@ NSWindow* windowToOverride;
         windowToOverride = self.window;
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(applicationDidResignActive:) name:NSApplicationDidResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(windowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:nil];
     }
     return self;
 }
 
+- (void) dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
 
     //*******************************************************************************
 #pragma mark - Drawing
@@ -136,8 +155,43 @@ NSWindow* windowToOverride;
 {
     _active = active;
     shouldBecomeKeyWindow = active;
+    if (active)
+    {
+        self.isActiveWithDelay = YES;
+        if ([NSApp isActive])
+        {
+            self.appWasActive = YES;
+            self.oldKeyWindow = [NSApp keyWindow];
+        }else{
+            self.appWasActive = NO;
+            for (NSWindow* window in [NSApp windows])
+            {
+                if (window.isVisible && window != self.window)
+                {
+                    window.isVisible = NO;
+                    self.isUpdatingWindows = YES;
+                    [self.hiddenWindows addObject:window];
+                    self.isUpdatingWindows = NO;
+                }
+            }
+            [NSApp activateIgnoringOtherApps:YES];
+        }
+    }else{
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:NSWindowWillCloseNotification object:nil];
+        if (self.appWasActive)
+        {
+            [self.oldKeyWindow makeKeyAndOrderFront:self];
+            self.isActiveWithDelay = NO;
+            self.counterOpenedWindows = 0;
+        }else{
+            [self performSelector:@selector(hideWithDelay:) withObject:nil afterDelay:0.05];
+        }
+        self.appWasActive = NO;
+        self.oldKeyWindow = nil;
+    }
+    self.isUpdatingWindows = YES;
     [self setNeedsDisplay:YES];
-    [NSApp activateIgnoringOtherApps:active];
+    self.isUpdatingWindows = NO;
 }
 
 - (void)setImage:(NSImage *)image
@@ -159,6 +213,32 @@ NSWindow* windowToOverride;
 #pragma mark - Notification Handler
     //*******************************************************************************
 
+- (void) windowDidBecomeKey:(NSNotification *)notification
+{
+    NSWindow* window = (NSWindow*)notification.object;
+    if (window != self.window && !self.isUpdatingWindows)
+    {
+        window.isVisible = YES;
+        if (self.isActiveWithDelay)
+        {
+            self.counterOpenedWindows++;
+            [self.hiddenWindows removeObject:window];
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(openedWindowWillClose:) name:NSWindowWillCloseNotification object:window];
+        }
+        [[NSRunningApplication currentApplication] activateWithOptions:(NSApplicationActivateIgnoringOtherApps)];
+    }
+    if (window != self.window && self.isUpdatingWindows)
+    {
+        [self.window makeKeyWindow];
+    }
+}
+
+- (void)openedWindowWillClose: (NSNotification*) note
+{
+    self.counterOpenedWindows--;
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:NSWindowWillCloseNotification object:note.object];
+}
+
 - (void)applicationDidResignActive:(NSNotification*)note
 {
     [self hidePopover];
@@ -168,7 +248,7 @@ NSWindow* windowToOverride;
 #pragma mark - Popover Delegate
     //*******************************************************************************
 
-    //This is safer then caring for the sended events. Sometimes to popup doesn't close, in these
+    //This is safer then caring for the sended events. Sometimes the popup doesn't close, in these
     //cases popover and status item became out of sync
 - (void) popoverWillShow: (NSNotification*) note
 {
@@ -260,6 +340,22 @@ NSWindow* windowToOverride;
     self.imageView.frame = frame;
     
     [self setNeedsDisplay:YES];
+}
+
+- (void) hideWithDelay: (id) stuff
+{
+    if (self.counterOpenedWindows == 0)
+    {
+        [NSApp hide:self];
+        for (NSWindow* window in self.hiddenWindows)
+        {
+            self.isUpdatingWindows = YES;
+            window.isVisible = NO;
+            self.isUpdatingWindows = NO;
+        }
+        self.isActiveWithDelay = NO;
+    }
+    self.counterOpenedWindows = 0;
 }
 
 @end

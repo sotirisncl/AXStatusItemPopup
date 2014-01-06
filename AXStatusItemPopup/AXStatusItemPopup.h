@@ -26,7 +26,7 @@
 
 @end
 
-@interface AXStatusItemPopup : NSView <NSPopoverDelegate>
+@interface AXStatusItemPopup : NSView <NSPopoverDelegate, NSWindowDelegate, NSApplicationDelegate>
 
 // properties
 @property(assign, nonatomic, getter=isAnimated) BOOL animated;

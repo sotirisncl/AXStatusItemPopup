@@ -8,15 +8,37 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface AXStatusItemPopup : NSView
+@interface NSWindow (canBecomeKeyWindow)
+
+@end
+
+@protocol AXStatusItemPopupDelegate <NSObject>
+
+@optional
+
+- (BOOL) shouldPopupOpen;
+- (void) popupWillOpen;
+- (void) popupDidOpen;
+
+- (BOOL) shouldPopupClose;
+- (void) popupWillClose;
+- (void) popupDidClose;
+
+@end
+
+@interface AXStatusItemPopup : NSView <NSPopoverDelegate, NSWindowDelegate, NSApplicationDelegate>
 
 // properties
-@property(assign, nonatomic, getter=isActive) BOOL active;
-@property(assign, nonatomic) BOOL animated;
+@property(assign, nonatomic, getter=isAnimated) BOOL animated;
 @property(strong, nonatomic) NSImage *image;
 @property(strong, nonatomic) NSImage *alternateImage;
-@property(strong, nonatomic) NSStatusItem *statusItem;
+@property(weak) id<AXStatusItemPopupDelegate> delegate;
 
+
+// alloc
++ (id)statusItemPopupWithViewController:(NSViewController *)controller;
++ (id)statusItemPopupWithViewController:(NSViewController *)controller image:(NSImage *)image;
++ (id)statusItemPopupWithViewController:(NSViewController *)controller image:(NSImage *)image alternateImage:(NSImage *)alternateImage;
 
 // init
 - (id)initWithViewController:(NSViewController *)controller;
@@ -25,6 +47,8 @@
 
 
 // show / hide popover
+- (void)togglePopover;
+- (void)togglePopoverAnimated: (BOOL)animated;
 - (void)showPopover;
 - (void)showPopoverAnimated:(BOOL)animated;
 - (void)hidePopover;

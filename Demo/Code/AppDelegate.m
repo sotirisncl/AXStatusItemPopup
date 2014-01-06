@@ -62,4 +62,13 @@
     [_statusItemPopup hidePopover];
 }
 
+- (IBAction)togglePopoverAnimated:(id)sender
+{
+    [_statusItemPopup togglePopoverAnimated:YES];
+}
+
+- (IBAction)togglePopover:(id)sender
+{
+    [_statusItemPopup togglePopoverAnimated:NO];
+}
 @end

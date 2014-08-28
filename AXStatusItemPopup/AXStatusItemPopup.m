@@ -112,11 +112,6 @@ NSWindow* windowToOverride;
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
-- (void)activeSpaceHasChanged: (NSNotification*)note {
-    self.appWasActive = NO;
-    [self hidePopover];
-}
-
 //
 #pragma mark - Drawing
 //
@@ -225,6 +220,11 @@ NSWindow* windowToOverride;
 }
 
 - (void)applicationDidResignActive:(NSNotification*)note {
+    [self hidePopover];
+}
+
+- (void)activeSpaceHasChanged: (NSNotification*)note {
+    self.appWasActive = NO;
     [self hidePopover];
 }
 

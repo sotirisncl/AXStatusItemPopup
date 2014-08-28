@@ -29,6 +29,7 @@ NSWindow* windowToOverride;
 @property BOOL appWasActive;
 @property BOOL isUpdatingWindows;
 @property BOOL isActiveWithDelay;
+@property id popoverTransiencyMonitor;
 
 @property (nonatomic)  NSRunningApplication* previousRunningApp;
 
@@ -152,6 +153,9 @@ NSWindow* windowToOverride;
     _active = active;
     shouldBecomeKeyWindow = active;
     if (active) {
+        self.popoverTransiencyMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask handler:^(NSEvent* event) {
+            [self hidePopover];
+        }];
         self.previousRunningApp = nil;
         self.isActiveWithDelay = YES;
         if ([NSApp isActive]) {
@@ -176,6 +180,10 @@ NSWindow* windowToOverride;
             }
         }
     } else {
+        if (self.popoverTransiencyMonitor) {
+            [NSEvent removeMonitor:_popoverTransiencyMonitor];
+            self.popoverTransiencyMonitor = nil;
+        }
         if (self.appWasActive) {
             [self.oldKeyWindow makeKeyAndOrderFront:self];
             self.isActiveWithDelay = NO;

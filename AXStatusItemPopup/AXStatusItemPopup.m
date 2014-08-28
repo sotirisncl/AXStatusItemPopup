@@ -132,8 +132,7 @@ NSWindow* windowToOverride;
 #pragma mark - Mouse Events
 //
 
-- (void)mouseDown:(NSEvent *)theEvent
-{
+- (void)mouseDown:(NSEvent *)theEvent {
     [self togglePopover];
 }
 
@@ -247,8 +246,7 @@ NSWindow* windowToOverride;
 }
 
 - (void) togglePopoverAnimated:(BOOL)animated {
-    if (self.isActive)
-    {
+    if (self.isActive) {
         [self hidePopover];
     } else {
         [self showPopoverAnimated:animated];

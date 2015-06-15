@@ -16,4 +16,7 @@
 - (IBAction)showPopoverAnimated:(id)sender;
 - (IBAction)hidePopover:(id)sender;
 
+- (IBAction)togglePopoverAnimated:(id)sender;
+- (IBAction)togglePopover:(id)sender;
+
 @end

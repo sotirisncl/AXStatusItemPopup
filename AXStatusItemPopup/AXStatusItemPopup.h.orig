@@ -33,15 +33,22 @@
 @property(strong, nonatomic) NSImage *image;
 @property(strong, nonatomic) NSImage *alternateImage;
 @property(weak) id<AXStatusItemPopupDelegate> delegate;
-//moved from .m
-@property(assign, nonatomic, getter=isActive) BOOL active;
-@property NSPopover *popover;
 
 
+<<<<<<< HEAD
+/**
+ Popovers may have one of several predefined appearances.
+ You may specify the appearance of a popover using the constants defined in NSPopoverAppearance. The default appearance is NSPopoverAppearanceMinimal.
+ 
+ @param appearance NSPopoverAppearance
+ */
+@property(nonatomic, strong, readonly) NSPopover *popover;
+=======
 // alloc
 + (id)statusItemPopupWithViewController:(NSViewController *)controller;
 + (id)statusItemPopupWithViewController:(NSViewController *)controller image:(NSImage *)image;
 + (id)statusItemPopupWithViewController:(NSViewController *)controller image:(NSImage *)image alternateImage:(NSImage *)alternateImage;
+>>>>>>> pr/1
 
 // init
 - (id)initWithViewController:(NSViewController *)controller;

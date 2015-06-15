@@ -62,6 +62,7 @@
     [_statusItemPopup hidePopover];
 }
 
+<<<<<<< HEAD
 - (IBAction)appearanceValueChanged:(id)sender {
     if ([_statusItemPopup isActive]) {
         [_statusItemPopup hidePopover];
@@ -73,7 +74,7 @@
         newAppearance = NSPopoverAppearanceHUD;
     }
     _statusItemPopup.popover.appearance = newAppearance;
-}
+=======
 - (IBAction)togglePopoverAnimated:(id)sender
 {
     [_statusItemPopup togglePopoverAnimated:YES];
@@ -82,5 +83,6 @@
 - (IBAction)togglePopover:(id)sender
 {
     [_statusItemPopup togglePopoverAnimated:NO];
+>>>>>>> pr/1
 }
 @end

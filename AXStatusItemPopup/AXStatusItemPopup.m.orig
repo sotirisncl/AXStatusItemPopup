@@ -16,14 +16,25 @@ NSWindow* windowToOverride;
 //
 // Private properties
 //
+<<<<<<< HEAD
+@interface AXStatusItemPopup () {
+    NSViewController *_viewController;
+    BOOL _active;
+    NSImageView *_imageView;
+    NSStatusItem *_statusItem;
+    NSMenu *_dummyMenu;
+    id _popoverTransiencyMonitor;
+}
+
+@property(nonatomic, strong, readwrite) NSPopover* popover;
+=======
 @interface AXStatusItemPopup ()
 
 @property NSViewController *viewController;
 @property NSImageView *imageView;
 @property NSStatusItem *statusItem;
-//moved to .h
-//@property NSPopover *popover;
-//@property(assign, nonatomic, getter=isActive) BOOL active;
+@property NSPopover *popover;
+@property(assign, nonatomic, getter=isActive) BOOL active;
 
 @property NSWindow* oldKeyWindow;
 @property NSMutableArray* hiddenWindows;
@@ -33,6 +44,7 @@ NSWindow* windowToOverride;
 @property id popoverTransiencyMonitor;
 
 @property (nonatomic)  NSRunningApplication* previousRunningApp;
+>>>>>>> pr/1
 
 @end
 
@@ -93,8 +105,12 @@ NSWindow* windowToOverride;
         
         self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
         self.statusItem.view = self;
+<<<<<<< HEAD
+        _dummyMenu = [[NSMenu alloc] init];
+=======
         self.statusItem.target = self;
         self.statusItem.action = @selector(togglePopover:);
+>>>>>>> pr/1
         
         self.popover = [[NSPopover alloc] init];
         self.popover.contentViewController = self.viewController;
@@ -132,6 +148,7 @@ NSWindow* windowToOverride;
     _imageView.image = image;
 }
 
+<<<<<<< HEAD
 ////////////////////////////////////
 #pragma mark - Position / Size
 ////////////////////////////////////
@@ -144,17 +161,26 @@ NSWindow* windowToOverride;
 ////////////////////////////////////
 #pragma mark - Mouse Actions
 ////////////////////////////////////
+=======
+//
+#pragma mark - Mouse Events
+//
+>>>>>>> pr/1
 
 - (void)mouseDown:(NSEvent *)theEvent {
     [self togglePopover];
 }
 
+<<<<<<< HEAD
 - (void)rightMouseDown:(NSEvent *)theEvent
 {
     [self mouseDown:nil];
 }
 
 ////////////////////////////////////
+=======
+//
+>>>>>>> pr/1
 #pragma mark - Setter
 //
 
@@ -352,6 +378,39 @@ NSWindow* windowToOverride;
 #pragma mark - Implementation NSWindow+canBecomeKeyWindow
 ///////////////////////////////////
 
+<<<<<<< HEAD
+- (void)showPopoverAnimated:(BOOL)animated
+{
+    self.active = YES;
+    
+    if (!_popover) {
+        _popover = [[NSPopover alloc] init];
+        _popover.contentViewController = _viewController;
+    }
+    
+    if (!_popover.isShown) {
+        _popover.animates = animated;
+        [self.statusItem popUpStatusItemMenu:_dummyMenu];
+        [_popover showRelativeToRect:self.frame ofView:self preferredEdge:NSMinYEdge];
+        _popoverTransiencyMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask handler:^(NSEvent* event) {
+            [self hidePopover];
+        }];
+    }
+}
+
+- (void)hidePopover
+{
+    self.active = NO;
+    
+    if (_popover && _popover.isShown) {
+        [_popover close];
+
+		if (_popoverTransiencyMonitor) {
+            [NSEvent removeMonitor:_popoverTransiencyMonitor];
+            _popoverTransiencyMonitor = nil;
+        }
+    }
+=======
 #import <objc/objc-class.h>
 
 @implementation NSWindow (canBecomeKeyWindow)
@@ -370,6 +429,7 @@ NSWindow* windowToOverride;
     method_exchangeImplementations(
                                    class_getInstanceMethod(self, @selector(canBecomeKeyWindow)),
                                    class_getInstanceMethod(self, @selector(swizzledPopoverCanBecomeKeyWindow)));
+>>>>>>> pr/1
 }
 
 @end

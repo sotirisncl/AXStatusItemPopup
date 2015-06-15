@@ -21,9 +21,8 @@ NSWindow* windowToOverride;
 @property NSViewController *viewController;
 @property NSImageView *imageView;
 @property NSStatusItem *statusItem;
-//moved to .h
-//@property NSPopover *popover;
-//@property(assign, nonatomic, getter=isActive) BOOL active;
+@property NSPopover *popover;
+@property(assign, nonatomic, getter=isActive) BOOL active;
 
 @property NSWindow* oldKeyWindow;
 @property NSMutableArray* hiddenWindows;
@@ -132,29 +131,15 @@ NSWindow* windowToOverride;
     _imageView.image = image;
 }
 
-////////////////////////////////////
-#pragma mark - Position / Size
-////////////////////////////////////
-
-- (void)setContentSize:(CGSize)size
-{
-    _popover.contentSize = size;
-}
-
-////////////////////////////////////
-#pragma mark - Mouse Actions
-////////////////////////////////////
+//
+#pragma mark - Mouse Events
+//
 
 - (void)mouseDown:(NSEvent *)theEvent {
     [self togglePopover];
 }
 
-- (void)rightMouseDown:(NSEvent *)theEvent
-{
-    [self mouseDown:nil];
-}
-
-////////////////////////////////////
+//
 #pragma mark - Setter
 //
 

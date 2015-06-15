@@ -16,6 +16,9 @@ profile
 DerivedData
 .idea/
 *.hmap
+<<<<<<< HEAD
 *.xccheckout
+=======
 
 Demo.xcodeproj/project.xcworkspace/xcshareddata/Demo.xccheckout
+>>>>>>> pr/1

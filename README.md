@@ -16,6 +16,8 @@ AXStatusItemPopup *statusItemPopup = [[AXStatusItemPopup alloc] initWithViewCont
 
 ```contentViewController``` an NSViewController instance. The contents of this view controllers view will be shown inside the popup. ```image``` is an NSImage that should be shown in the status bar. ```alternateImage``` an NSImage that should be shown if the popover is currently active.
 
+To avoid problems and to hide the MainMenu set ```Application is agent``` in the .plist file to ```YES```.
+
 ### Full Example
 
 ```objective-c
@@ -51,8 +53,29 @@ The popover can be shown and hidden manually within code by calling the followin
 
 // hides popover
 [statusItemPopup hidePopover];
+
+// toggle popover (when it's active, it'll disappear, else it is showed)
+[statusItemPopup togglePopover];
+
+// This should be clear
+[statusItemPopup togglePopoverAnimated:YES];
 ```
 
+### The AXStatusItemPopupDelegate
+You can add a delegate to an ```AXStatusItemPopup``` object. The following delegate methods are available, all aren't required:
+```objective-c
+- (BOOL) shouldPopupOpen;
+- (void) popupWillOpen;
+- (void) popupDidOpen;
+
+- (BOOL) shouldPopupClose;
+- (void) popupWillClose;
+- (void) popupDidClose;
+```
+
+### Please notice
+
+The popover won't be able to close if in its content view another popup is open (Maybe something else won't work too). As a workaround set the delegate of the StatusItemPopup and listen for ```popoverWillClose``` to close these before the popover itself is closed.
 
 ## Contributing
 
